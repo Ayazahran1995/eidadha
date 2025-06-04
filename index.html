@@ -1,152 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Eid Kaleidoscope</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #2563eb;  /* Fintech blue */
-      --dark: #1e293b;     /* Dark slate */
-      --light: #f8fafc;    /* Off-white */
-    }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: var(--light);
-      color: var(--dark);
-    }
-    #header {
-      background: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      padding: 1rem;
-      text-align: center;
-    }
-    #header h1 {
-      color: var(--primary);
-      margin: 0;
-      font-weight: 600;
-    }
-    #controls {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      align-items: center;
-    }
-    .btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn:hover {
-      background: #1d4ed8;
-      transform: translateY(-1px);
-    }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--primary);
-      color: var(--primary);
-    }
-    #canvas-container {
-      margin: 0 auto;
-      width: fit-content;
-    }
-    .tooltip {
-      position: relative;
-    }
-    .tooltip:after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--dark);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      opacity: 0;
-      transition: opacity 0.2s;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-    .tooltip:hover:after {
-      opacity: 1;
-    }
-    #brush-preview {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--primary);
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 8px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eid Kaleidoscope</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;  /* Fintech blue */
+            --dark: #1e293b;     /* Dark slate */
+            --light: #f8fafc;    /* Off-white */
+        }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            display: flex; /* Use flexbox for centering */
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center horizontally */
+            justify-content: center; /* Center vertically */
+            min-height: 100vh; /* Full viewport height */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        #welcome-screen { /* New container for welcome content */
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            max-width: 500px;
+            width: 90%;
+            margin-bottom: 20px; /* Space below welcome screen */
+        }
+        #welcome-screen h1 {
+            color: var(--primary);
+            margin: 0 0 10px 0;
+            font-weight: 600;
+            font-size: 2.5rem;
+        }
+        #welcome-screen p {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3); /* Shadow for primary button */
+        }
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        /* Styles for p5.js created elements (matching JavaScript's classes) */
+        .p5-button {
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            transition: background-color 0.3s ease, transform 0.2s ease !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+        }
+        .p5-button:hover {
+            transform: translateY(-1px) !important;
+        }
+        .p5-color-picker {
+            border-radius: 8px !important;
+            border: 1px solid #cbd5e0 !important;
+            height: 36px !important;
+            width: 60px !important;
+            cursor: pointer;
+        }
+        .p5-slider {
+            -webkit-appearance: none;
+            width: 100px;
+            height: 8px;
+            background: #cbd5e0;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+            border-radius: 4px;
+        }
+        .p5-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4299e1; /* Blue thumb */
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .p5-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        /* Tooltip text is handled by p5.js span, not :after pseudo-element */
+        /* The CSS for .tooltip:after and :hover:after should be removed as it's not used by the JS */
+        /* The JavaScript creates a span with class 'tooltip' and sets its 'title' attribute */
+        /* You might want to adjust the p5.js created span's tooltip style if needed */
+
+        #canvas-container {
+            display: none; /* Hidden by default, shown by JS */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box; /* Include padding in width */
+            padding: 20px;
+        }
+        canvas {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background-color: white;
+        }
+    </style>
 </head>
 <body>
-  <div id="header">
-    <h1>⚡ Eid Kaleidoscope</h1>
-     <p>Create beautiful symmetrical art to celebrate Eid! Click "Start Drawing" to begin.</p>
-    <button id="start-btn" class="btn">🎨 Start Drawing</button>
-    <p><small>Move your mouse to draw. Adjust colors and brush size below.</small></p>
-  </div>
-
-  <div id="canvas-container" style="display: none;">
-    <!-- Canvas will be inserted here by p5.js -->
-  </div>
- 
-
-  <div id="controls">
-    <button id="save-btn" class="btn" data-tooltip="Download as PNG">💾 Save</button>
-    <button id="clear-btn" class="btn btn-outline">🧹 Clear</button>
-    
-    <div class="tooltip" data-tooltip="Brush Color">
-      <label for="color-picker">🎨</label>
-      <input type="color" id="color-picker" value="#2563eb">
-    </div>
-    
-    <div class="tooltip" data-tooltip="Brush Size (1-32px)">
-      <label for="brush-size">✒️</label>
-      <input type="range" id="brush-size" min="1" max="32" value="8">
-      <span id="brush-size-value">8</span>px
+    <!-- Welcome Screen -->
+    <div id="welcome-screen">
+        <h1>⚡ Eid Kaleidoscope</h1>
+        <p>Create beautiful symmetrical art to celebrate Eid! Click "Start Drawing" to begin.</p>
+        <button id="start-btn" class="btn">🎨 Start Drawing</button>
+        <p><small>Move your mouse to draw. Adjust colors and brush size below.</small></p>
     </div>
 
-    <div id="brush-preview"></div>
-  </div>
+    <!-- Canvas Container (initially hidden) -->
+    <div id="canvas-container">
+        <!-- p5.js canvas and dynamically created UI will be inserted here by sketch.js -->
+    </div>
 
-  <div id="canvas-container"></div>
-
-  <script src="sketch.js"></script>
-  <script>
-    // Update brush preview in real-time
-    const colorPicker = document.getElementById('color-picker');
-    const brushSize = document.getElementById('brush-size');
-    const brushPreview = document.getElementById('brush-preview');
-    const sizeValue = document.getElementById('brush-size-value');
-
-    colorPicker.addEventListener('input', (e) => {
-      brushPreview.style.background = e.target.value;
-    });
-
-    brushSize.addEventListener('input', (e) => {
-      sizeValue.textContent = e.target.value;
-      brushPreview.style.width = `${e.target.value}px`;
-      brushPreview.style.height = `${e.target.value}px`;
-    });
-  </script>
+    <!-- Link to your JavaScript file -->
+    <script src="sketch.js"></script>
 </body>
 </html>
+
