@@ -1,144 +1,137 @@
+// Fintech Eid Kaleidoscope - Full Code
 let symmetry = 6;
 let angle;
-let drawMode = 'line';
-let stars = [];
+let strokeColor = '#2563eb'; // Fintech blue
+let strokeWeight = 8;
+let backgroundColor = '#ffffff';
 let isDrawing = false;
 
-// UI Elements
-let saveButton, clearButton, colorPicker, strokeWidthSlider, backgroundColorPicker;
-
 function setup() {
-  const canvas = createCanvas(windowWidth - 40, windowHeight - 200);
+  const canvas = createCanvas(windowWidth - 40, 600);
   canvas.parent('canvas-container');
   angleMode(DEGREES);
   angle = 360 / symmetry;
-  background(255);
-  stroke(50, 115, 220); // Fintech blue
-  strokeWeight(4);
-
-  // Welcome screen button
-  document.getElementById('start-btn').addEventListener('click', () => {
-    document.getElementById('welcome-screen').style.display = 'none';
-    document.getElementById('canvas-container').style.display = 'block';
-    isDrawing = true;
-  });
-
-  // Modern UI Panel
-  const uiPanel = createDiv();
-  uiPanel.style('background', 'white');
-  uiPanel.style('padding', '15px');
-  uiPanel.style('border-radius', '12px');
-  uiPanel.style('box-shadow', '0 4px 12px rgba(0,0,0,0.1)');
-  uiPanel.style('margin', '20px auto');
-  uiPanel.style('max-width', '800px');
-
-  // Save Button
-  saveButton = createButton('💾 Save Art');
-  saveButton.parent(uiPanel);
-  saveButton.style('background', '#3182ce');
-  saveButton.style('color', 'white');
-  saveButton.style('border', 'none');
-  saveButton.style('padding', '8px 16px');
-  saveButton.style('margin-right', '10px');
-  saveButton.mousePressed(saveImage);
-
-  // Clear Button
-  clearButton = createButton('🧹 Clear');
-  clearButton.parent(uiPanel);
-  clearButton.style('background', '#e53e3e');
-  clearButton.style('color', 'white');
-  clearButton.style('border', 'none');
-  clearButton.style('padding', '8px 16px');
-  clearButton.mousePressed(clearCanvas);
-
-  // Color Picker with Tooltip
-  let colorLabel = createSpan('🎨 Brush: ');
-  colorLabel.parent(uiPanel);
-  colorLabel.class('tooltip');
-  colorLabel.attribute('title', 'Change drawing color');
-  colorPicker = createColorPicker('#3273dc');
-  colorPicker.parent(uiPanel);
-  colorPicker.style('margin', '0 15px');
-
-  // Brush Size
-  let sizeLabel = createSpan('✒️ Size: ');
-  sizeLabel.parent(uiPanel);
-  strokeWidthSlider = createSlider(1, 32, 4, 1);
-  strokeWidthSlider.parent(uiPanel);
-  strokeWidthSlider.style('width', '100px');
-
-  // Mode Toggle
-  let modeButton = createButton('🌟 Toggle Stars');
-  modeButton.parent(uiPanel);
-  modeButton.style('background', '#805ad5');
-  modeButton.style('margin-left', '15px');
-  modeButton.mousePressed(() => {
-    drawMode = drawMode === 'line' ? 'star' : 'line';
-    modeButton.html(drawMode === 'line' ? '🌟 Toggle Stars' : '➖ Toggle Lines');
-  });
+  background(backgroundColor);
+  
+  createFintechUI();
+  setupEventListeners();
 }
 
 function draw() {
-  if (!isDrawing) return;
-
   translate(width / 2, height / 2);
-  stroke(colorPicker.color());
-  strokeWeight(strokeWidthSlider.value());
-
-  if (mouseIsPressed) {
+  
+  if (isDrawing && mouseIsPressed) {
+    stroke(strokeColor);
+    strokeWeight(strokeWeight);
+    
     let mx = mouseX - width / 2;
     let my = mouseY - height / 2;
     let pmx = pmouseX - width / 2;
     let pmy = pmouseY - height / 2;
 
-    // Sparkles
-    if (random() > 0.7) {
-      fill(255, 215, 0);
-      noStroke();
-      circle(mx, my, random(2, 5));
-    }
-
-    // Symmetrical drawing
+    // Fintech-style symmetrical patterns
     for (let i = 0; i < symmetry; i++) {
       rotate(angle);
-      if (drawMode === 'line') {
-        line(mx, my, pmx, pmy);
-      } else {
-        drawStar(mx, my, strokeWidthSlider.value() * 2);
-      }
+      line(mx, my, pmx, pmy);
+      
+      // Modern mirrored effect
       push();
       scale(1, -1);
-      if (drawMode === 'line') line(mx, my, pmx, pmy);
-      else drawStar(mx, my, strokeWidthSlider.value() * 2);
+      line(mx, my, pmx, pmy);
       pop();
+    }
+
+    // Add data-point dots (fintech aesthetic)
+    if (frameCount % 5 === 0) {
+      noStroke();
+      fill(strokeColor);
+      circle(mx, my, strokeWeight/2);
     }
   }
 }
 
-function drawStar(x, y, size) {
-  push();
-  translate(x, y);
-  fill(colorPicker.color());
-  noStroke();
-  beginShape();
-  for (let i = 0; i < 5; i++) {
-    let angle = i * 72 - 90;
-    vertex(cos(angle) * size, sin(angle) * size);
-    angle += 36;
-    vertex(cos(angle) * (size / 2), sin(angle) * (size / 2));
-  }
-  endShape(CLOSE);
-  pop();
+function createFintechUI() {
+  // Main control panel
+  const controls = createDiv();
+  controls.id('controls');
+  controls.style('background', 'white');
+  controls.style('border-radius', '12px');
+  controls.style('box-shadow', '0 4px 20px rgba(0,0,0,0.05)');
+  controls.style('max-width', '900px');
+  controls.style('margin', '20px auto');
+  controls.style('padding', '20px');
+  controls.style('display', 'flex');
+  controls.style('flex-wrap', 'wrap');
+  controls.style('gap', '15px');
+  controls.style('align-items', 'center');
+
+  // Save button
+  const saveBtn = createButton('💾 Save');
+  saveBtn.parent(controls);
+  saveBtn.class('btn');
+  saveBtn.mousePressed(() => saveCanvas('fintech-eid-art', 'png'));
+
+  // Clear button
+  const clearBtn = createButton('🧹 Clear');
+  clearBtn.parent(controls);
+  clearBtn.class('btn btn-outline');
+  clearBtn.mousePressed(() => {
+    clear();
+    background(backgroundColor);
+  });
+
+  // Color picker
+  const colorLabel = createSpan('🎨');
+  colorLabel.parent(controls);
+  colorLabel.attribute('data-tooltip', 'Brush Color');
+  colorLabel.class('tooltip');
+  
+  const colorPicker = createColorPicker('#2563eb');
+  colorPicker.parent(controls);
+  colorPicker.input(() => {
+    strokeColor = colorPicker.value();
+    select('#brush-preview').style('background', strokeColor);
+  });
+
+  // Brush size slider
+  const sizeLabel = createSpan('✒️');
+  sizeLabel.parent(controls);
+  sizeLabel.attribute('data-tooltip', 'Brush Size (1-32px)');
+  sizeLabel.class('tooltip');
+  
+  const sizeSlider = createSlider(1, 32, 8, 1);
+  sizeSlider.parent(controls);
+  sizeSlider.input(() => {
+    strokeWeight = sizeSlider.value();
+    select('#brush-size-value').html(strokeWeight);
+    select('#brush-preview').style('width', `${strokeWeight}px`);
+    select('#brush-preview').style('height', `${strokeWeight}px`);
+  });
+
+  // Size value display
+  const sizeValue = createSpan('8px');
+  sizeValue.parent(controls);
+  sizeValue.id('brush-size-value');
+
+  // Brush preview
+  const brushPreview = createDiv();
+  brushPreview.parent(controls);
+  brushPreview.id('brush-preview');
+  brushPreview.style('width', '24px');
+  brushPreview.style('height', '24px');
+  brushPreview.style('border-radius', '50%');
+  brushPreview.style('background', strokeColor);
+  brushPreview.style('display', 'inline-block');
 }
 
-function saveImage() {
-  saveCanvas('eid-art', 'png');
-}
-
-function clearCanvas() {
-  background(255);
+function setupEventListeners() {
+  // Start drawing when canvas is clicked
+  const canvas = select('#canvas-container').elt;
+  canvas.addEventListener('mousedown', () => isDrawing = true);
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseleave', () => isDrawing = false);
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth - 40, windowHeight - 200);
+  resizeCanvas(windowWidth - 40, 600);
 }
