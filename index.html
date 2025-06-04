@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eid Mubarak Kaleidoscope | Interactive Art</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f8f9fa;
+      color: #333;
+    }
+    #canvas-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .welcome-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 30px;
+      text-align: center;
+    }
+    .welcome-card h1 {
+      color: #2a4365;
+      margin-bottom: 10px;
+    }
+    .welcome-card p {
+      color: #4a5568;
+      line-height: 1.6;
+    }
+    .btn {
+      background: #3182ce;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #2c5282;
+    }
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="welcome-screen" class="welcome-card">
+    <h1>🌙 Eid Mubarak Kaleidoscope</h1>
+    <p>Create beautiful symmetrical art to celebrate Eid! Click "Start Drawing" to begin.</p>
+    <button id="start-btn" class="btn">🎨 Start Drawing</button>
+    <p><small>Move your mouse to draw. Adjust colors and brush size below.</small></p>
+  </div>
+
+  <div id="canvas-container" style="display: none;">
+    <!-- Canvas will be inserted here by p5.js -->
+  </div>
+
+  <script src="sketch.js"></script>
+</body>
+</html>
