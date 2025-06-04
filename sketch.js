@@ -1,4 +1,4 @@
-let symmetry = 6;
+let symmetry = 8; 
 let angle;
 let drawMode = 'line'; // Can be 'line' or 'lamb'
 let isDrawing = false;
@@ -213,7 +213,7 @@ function drawEidMubarakText() {
     textSize(min(width, height) * 0.08); // Responsive text size
     fill(50, 115, 220, 150); // Fintech blue with transparency
     noStroke(); // No stroke for the text
-    text("Eid Adha Mubarak", width / 2, height / 2); // Draw text in the center of the canvas
+    text("Happy Eid", width / 2, height / 2); // Draw text in the center of the canvas
     pop(); // Restore previous drawing style
 }
 
