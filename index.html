@@ -100,7 +100,15 @@
 <body>
   <div id="header">
     <h1>⚡ Eid Kaleidoscope</h1>
+     <p>Create beautiful symmetrical art to celebrate Eid! Click "Start Drawing" to begin.</p>
+    <button id="start-btn" class="btn">🎨 Start Drawing</button>
+    <p><small>Move your mouse to draw. Adjust colors and brush size below.</small></p>
   </div>
+
+  <div id="canvas-container" style="display: none;">
+    <!-- Canvas will be inserted here by p5.js -->
+  </div>
+ 
 
   <div id="controls">
     <button id="save-btn" class="btn" data-tooltip="Download as PNG">💾 Save</button>
