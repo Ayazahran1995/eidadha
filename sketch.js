@@ -2,9 +2,10 @@ let symmetry = 6;
 let angle;
 let drawMode = 'line'; // Can be 'line' or 'lamb'
 let isDrawing = false;
+let showEidMubarak = true; // New variable to control text visibility
 
 // UI Elements
-let saveButton, clearButton, colorPicker, strokeWidthSlider;
+let saveButton, clearButton, colorPicker, strokeWidthSlider, toggleTextButton;
 
 function setup() {
     // Create the canvas and attach it to the 'canvas-container' div
@@ -23,6 +24,7 @@ function setup() {
         document.getElementById('welcome-screen').style.display = 'none'; // Hide welcome screen
         document.getElementById('canvas-container').style.display = 'flex'; // Show canvas container
         isDrawing = true; // Enable drawing
+        clearCanvas(); // Clear canvas and draw initial text
     });
 
     // Create a modern UI Panel using p5.js createDiv and apply Tailwind-like styles
@@ -99,11 +101,27 @@ function setup() {
         drawMode = drawMode === 'line' ? 'lamb' : 'line'; // Toggle between line and lamb
         modeButton.html(drawMode === 'line' ? '🐑 Toggle Lamb' : '➖ Toggle Lines'); // Update button text
     });
+
+    // Toggle Eid Mubarak Text Button
+    toggleTextButton = createButton('Toggle Eid Text');
+    toggleTextButton.parent(uiPanel);
+    toggleTextButton.class('p5-button');
+    toggleTextButton.style('background', '#2f855a'); // Greenish color
+    toggleTextButton.style('color', 'white');
+    toggleTextButton.style('border', 'none');
+    toggleTextButton.style('padding', '8px 16px');
+    toggleTextButton.style('margin', '5px');
+    toggleTextButton.mousePressed(() => {
+        showEidMubarak = !showEidMubarak; // Toggle the boolean
+        clearCanvas(); // Redraw canvas to reflect text visibility change
+    });
 }
 
 function draw() {
     if (!isDrawing) return; // Only draw if drawing is enabled
 
+    // Save the current transformation state
+    push();
     // Translate origin to the center of the canvas for symmetrical drawing
     translate(width / 2, height / 2);
     stroke(colorPicker.color()); // Set stroke color from the color picker
@@ -139,6 +157,13 @@ function draw() {
             else drawLamb(mx, my, strokeWidthSlider.value() * 3);
             pop(); // Restore the drawing state
         }
+    }
+    // Restore the transformation state before drawing text
+    pop();
+
+    // Draw Eid Mubarak text as an overlay if enabled
+    if (showEidMubarak) {
+        drawEidMubarakText();
     }
 }
 
@@ -181,6 +206,17 @@ function drawLamb(x, y, size) {
     pop(); // Restore the previous drawing state
 }
 
+// Function to draw "Eid Adha Mubarak" text
+function drawEidMubarakText() {
+    push(); // Save current drawing style
+    textAlign(CENTER, CENTER); // Center the text
+    textSize(min(width, height) * 0.08); // Responsive text size
+    fill(50, 115, 220, 150); // Fintech blue with transparency
+    noStroke(); // No stroke for the text
+    text("Eid Adha Mubarak", width / 2, height / 2); // Draw text in the center of the canvas
+    pop(); // Restore previous drawing style
+}
+
 // Function to save the canvas as an image
 function saveImage() {
     saveCanvas('eid-art', 'png');
@@ -189,11 +225,13 @@ function saveImage() {
 // Function to clear the canvas
 function clearCanvas() {
     background(255); // Set background back to white
+    if (showEidMubarak) {
+        drawEidMubarakText(); // Redraw text if enabled
+    }
 }
 
 // Function to resize the canvas when the window is resized
 function windowResized() {
     resizeCanvas(windowWidth - 40, windowHeight - 200);
-    // Re-center the drawing if needed, though p5.js handles this well with translate
-    background(255); // Clear and redraw background on resize
+    clearCanvas(); // Clear and redraw background and text on resize
 }
